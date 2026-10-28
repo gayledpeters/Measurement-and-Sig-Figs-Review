@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Measurement &amp; Significant Figures: Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Didact+Gothic&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E8EEF6; --bg2:#D7E1EF; --surface:#FFFFFF; --surface2:#F2F6FB; --ink:#18263D; --muted:#56667E; --line:#C7D3E4;
+  --blue:#2B5797; --on-blue:#FFFFFF; --blue-soft:#DCE6F5; --red:#B3141D; --est:#C9670A; --est-soft:#FBE7CF;
+  --good:#1D7A4C; --good-soft:#D8F0E3; --bad:#B3141D; --bad-soft:#F8DADA;
+  --target-red:#C8202A; --target-white:#FFFFFF; --dart:#1F3F73;
+  --serif:"Palatino Linotype","Book Antiqua",Palatino,"URW Palladio L","TeX Gyre Pagella",Georgia,serif;
+  --sans:"Century Gothic","URW Gothic L","URW Gothic","Didact Gothic","Avenir Next",Avenir,"Trebuchet MS",sans-serif;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1A2D; --bg2:#0B1424; --surface:#17253D; --surface2:#1D2E4B; --ink:#E6EDF7; --muted:#A3B3CB; --line:#2D4166;
+    --blue:#8FB5EE; --on-blue:#0F1A2D; --blue-soft:#22385C; --red:#FF7B7B; --est:#F4A445; --est-soft:#4A3417;
+    --good:#5CCB92; --good-soft:#173D2C; --bad:#FF7B7B; --bad-soft:#4A1E24;
+    --target-red:#B81E28; --target-white:#E9EEF5; --dart:#0F1A2D;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1A2D; --bg2:#0B1424; --surface:#17253D; --surface2:#1D2E4B; --ink:#E6EDF7; --muted:#A3B3CB; --line:#2D4166;
+  --blue:#8FB5EE; --on-blue:#0F1A2D; --blue-soft:#22385C; --red:#FF7B7B; --est:#F4A445; --est-soft:#4A3417;
+  --good:#5CCB92; --good-soft:#173D2C; --bad:#FF7B7B; --bad-soft:#4A1E24;
+  --target-red:#B81E28; --target-white:#E9EEF5; --dart:#0F1A2D;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{background:var(--bg2);scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);background-image:radial-gradient(ellipse 90% 70% at 50% 0%,var(--bg) 40%,var(--bg2) 100%);background-attachment:fixed;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55}
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px 48px}
+h1,h2,h3{font-family:var(--serif);font-weight:400;color:var(--blue);margin:0}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--est);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- header ---------- */
+.top{display:grid;grid-template-columns:1fr auto;gap:28px;align-items:end;padding:36px 0 22px}
+.top h1{font-size:clamp(32px,5.2vw,52px);line-height:1.05;letter-spacing:-.01em}
+.top p{margin:12px 0 0;color:var(--muted);max-width:52ch}
+.reading-hero{font-family:var(--serif);text-align:center;user-select:none}
+.reading-hero .num{font-size:clamp(54px,9vw,92px);line-height:1;display:flex;align-items:baseline;justify-content:center}
+.reading-hero .cert{color:var(--ink)}
+.reading-hero .est{color:var(--est);display:inline-block;animation:wobble 3.2s ease-in-out 1.2s infinite}
+.reading-hero .unit{font-size:.38em;color:var(--muted);margin-left:.18em}
+.legend{display:flex;justify-content:center;gap:14px;font-family:var(--sans);font-size:13px;color:var(--muted);margin-top:6px}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px;background:var(--ink)}
+.legend span.e::before{background:var(--est)}
+@keyframes wobble{0%,70%,100%{transform:translateY(0)}76%{transform:translateY(-6px)}82%{transform:translateY(0)}88%{transform:translateY(-3px)}}
+
+/* ---------- station tabs ---------- */
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:thin}
+.tab{flex:0 0 auto;border:1px solid var(--line);background:var(--surface2);color:var(--ink);padding:9px 16px;border-radius:999px;cursor:pointer;font-size:15px;transition:background .2s,color .2s,border-color .2s}
+.tab:hover{border-color:var(--blue)}
+.tab[aria-selected="true"]{background:var(--blue);color:var(--on-blue);border-color:var(--blue)}
+
+/* ---------- station ---------- */
+.station{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:26px 28px 30px;margin-top:6px;animation:stIn .35s ease both}
+@keyframes stIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.st-head{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:18px}
+.st-head h2{font-size:clamp(26px,3.4vw,34px);line-height:1.15}
+.st-head p{margin:6px 0 0;color:var(--muted);max-width:68ch}
+.score{flex:0 0 auto;font-size:14px;color:var(--muted);background:var(--surface2);border:1px solid var(--line);border-radius:999px;padding:5px 12px;white-space:nowrap}
+.score.bump{animation:bump .4s ease}
+@keyframes bump{40%{transform:scale(1.12)}}
+.seg{display:inline-flex;flex-wrap:wrap;gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:20px}
+.seg button{border:0;background:transparent;padding:8px 14px;cursor:pointer;font-size:14px;color:var(--muted);border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--blue-soft);color:var(--ink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--blue);background:var(--blue);color:var(--on-blue);padding:10px 18px;border-radius:10px;cursor:pointer;font-size:15px;transition:transform .12s,filter .2s}
+.btn:hover{filter:brightness(1.08)}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:transparent;color:var(--blue)}
+.btn[disabled]{opacity:.45;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.feedback{margin-top:16px;border-radius:10px;padding:0 16px;max-height:0;overflow:hidden;opacity:0;transition:opacity .3s,padding .3s}
+.feedback.show{max-height:none;opacity:1;padding:14px 16px;border-left:4px solid var(--blue);background:var(--blue-soft)}
+.feedback.ok{border-left-color:var(--good);background:var(--good-soft)}
+.feedback.no{border-left-color:var(--bad);background:var(--bad-soft)}
+.feedback p{margin:0 0 6px}.feedback p:last-child{margin:0}
+.feedback strong{font-weight:700}
+.cap{font-size:13px;color:var(--muted);margin:8px 0 0;text-align:center}
+.cert{color:inherit}
+.est{color:var(--est);font-weight:700}
+.reading{font-family:var(--serif);font-size:1.25em}
+input.num{font-family:var(--serif);font-size:22px;width:160px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface2);color:var(--ink)}
+input.num:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 3px var(--blue-soft)}
+.inp{display:inline-flex;align-items:center;gap:8px;font-family:var(--serif);font-size:20px;color:var(--muted)}
+label.lbl{display:block;font-size:14px;color:var(--muted);margin-bottom:6px}
+
+/* ---------- accuracy ---------- */
+.acc-grid{display:grid;grid-template-columns:minmax(260px,380px) 1fr;gap:32px;align-items:start}
+#target{width:100%;max-width:380px;display:block;margin:0 auto;overflow:visible}
+.ring-r{fill:var(--target-red)}.ring-w{fill:var(--target-white)}
+#target .rim{fill:none;stroke:var(--line);stroke-width:2}
+.dart-head{fill:var(--dart);stroke:var(--target-white);stroke-width:2}
+.dart-dot{fill:var(--est)}
+.spread-halo{fill:none;stroke:var(--target-white);stroke-width:8;opacity:0;transition:opacity .4s .3s}.spread-halo.drawn{opacity:.9}
+.spread{fill:none;stroke:var(--est);stroke-width:4;stroke-dasharray:100;stroke-dashoffset:100;transition:stroke-dashoffset .9s ease}
+.spread.drawn{stroke-dashoffset:0}
+.mean{stroke:var(--ink);stroke-width:3.5;stroke-linecap:round;opacity:0;transition:opacity .4s .5s}
+.mean.drawn{opacity:1}
+.mean-halo{stroke:var(--target-white);stroke-width:7;stroke-linecap:round;opacity:0;transition:opacity .4s .5s}
+.mean-halo.drawn{opacity:1}
+.ask{font-family:var(--serif);font-size:20px;margin:0 0 12px}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.choice{text-align:left;border:1px solid var(--line);background:var(--surface2);border-radius:10px;padding:12px 14px;cursor:pointer;transition:border-color .2s,background .2s,transform .15s}
+.choice:hover:not([disabled]){border-color:var(--blue);transform:translateY(-1px)}
+.choice[disabled]{cursor:default}
+.choice.right{border-color:var(--good);background:var(--good-soft);animation:pop .35s ease}
+.choice.wrong{border-color:var(--bad);background:var(--bad-soft);animation:shake .4s ease}
+@keyframes pop{50%{transform:scale(1.04)}}
+@keyframes shake{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+.lab-card{border:1px solid var(--line);border-radius:12px;background:var(--surface2);padding:18px}
+.lab-card h3{font-size:21px;color:var(--ink)}
+.lab-card .acc-val{margin:4px 0 14px;color:var(--muted)}
+.lab-card table{width:100%;border-collapse:collapse;font-family:var(--serif);font-size:20px}
+.lab-card td,.lab-card th{padding:7px 4px;border-bottom:1px solid var(--line);text-align:left}
+.lab-card th{font-family:var(--sans);font-size:13px;color:var(--muted);font-weight:400}
+.lab-card tr{animation:rowIn .4s ease both}
+@keyframes rowIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+
+/* ---------- instruments ---------- */
+.ruler-row{display:grid;grid-template-columns:1fr 240px;gap:22px;align-items:center}
+.ruler-wrap{overflow-x:auto;padding-bottom:4px}
+#ruler{width:100%;min-width:560px;display:block}
+.ruler-body{fill:#F3DDA3;stroke:#A8843F;stroke-width:1.5}
+.tick{stroke:#3A2A10;stroke-width:1.2}
+.tlabel{font-family:var(--sans);font-size:14px;fill:#3A2A10}
+.splint-body{fill:#A86B32}
+.grain{stroke:#8A5422;stroke-width:1.2;fill:none;opacity:.7}
+.splint{transform-box:fill-box;transform-origin:left center}
+.lens{margin:0;text-align:center}
+.lens svg{width:100%;aspect-ratio:1/1;display:block;border-radius:50%;border:4px solid var(--ink);background:var(--surface2);box-shadow:0 6px 18px rgba(10,20,40,.18);opacity:0;transform:scale(.85);transition:opacity .4s,transform .4s}
+.lens.on svg{opacity:1;transform:none}
+.lens figcaption{font-size:13px;color:var(--muted);margin-top:8px}
+.ins-answer{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-top:20px}
+
+/* ---------- number tiles ---------- */
+.digits{display:flex;flex-wrap:wrap;align-items:flex-start;gap:6px 4px;font-family:var(--serif);perspective:600px;min-height:96px}
+.tile{display:inline-flex;flex-direction:column;align-items:center;animation:tileIn .45s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--d,0ms);border:0;background:none;padding:0}
+@keyframes tileIn{from{opacity:0;transform:translateY(16px) rotateX(70deg)}to{opacity:1;transform:none}}
+.tile.digit{width:clamp(44px,9vw,62px)}
+.tile.digit .g{width:100%}
+.tile .g{font-size:clamp(34px,6.2vw,54px);line-height:1.1;min-width:.9em;text-align:center;padding:4px 6px;border-radius:10px;border:2px solid transparent;transition:background .35s,border-color .35s,color .35s,opacity .35s,transform .35s;transition-delay:var(--d2,0ms)}
+.tile.point .g,.tile.sep .g{min-width:0;padding:4px 1px}
+.tile.sep .g{width:.35em}
+.tile.sci .g{font-size:clamp(28px,5vw,44px);padding-top:12px;white-space:nowrap}
+.tile .tag{font-family:var(--sans);font-size:11px;line-height:1.2;color:var(--muted);width:100%;min-height:2.5em;text-align:center;margin-top:4px;opacity:0;transform:translateY(-4px);transition:opacity .35s,transform .35s;transition-delay:var(--d2,0ms)}
+.tile.sig .g{background:var(--blue-soft);border-color:var(--blue);color:var(--ink)}
+.tile.nsig .g{border:2px dashed var(--line);color:var(--muted);opacity:.65}
+.tile.sig .tag,.tile.nsig .tag,.tile.showtag .tag{opacity:1;transform:none}
+.tile.target .g{background:var(--est-soft);border-color:var(--est);color:var(--ink);animation:pulse 1.6s ease-in-out 3}
+@keyframes pulse{50%{box-shadow:0 0 0 6px var(--est-soft)}}
+button.tile{cursor:pointer}
+button.tile .g{border:2px solid var(--line);background:var(--surface2)}
+button.tile:hover .g{border-color:var(--blue)}
+button.tile[aria-pressed="true"] .g{background:var(--blue);color:var(--on-blue);border-color:var(--blue);transform:translateY(-3px)}
+button.tile.hit .g{background:var(--good-soft);border-color:var(--good);color:var(--ink);transform:none}
+button.tile.miss .g{background:var(--est-soft);border:2px dashed var(--est);color:var(--ink);transform:none;animation:pop .4s ease}
+button.tile.wrongpick .g{background:var(--bad-soft);border-color:var(--bad);color:var(--ink);text-decoration:line-through;transform:none;animation:shake .4s ease}
+button.tile.skip .g{opacity:.55;border-style:dashed}
+.count{font-family:var(--serif);font-size:22px;margin:14px 0 0;min-height:1.4em}
+.count b{font-size:1.7em;color:var(--blue);display:inline-block;animation:pop .45s ease;font-weight:400}
+.presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip-btn{border:1px solid var(--line);background:var(--surface2);border-radius:999px;padding:4px 11px;cursor:pointer;font-family:var(--serif);font-size:16px}
+.chip-btn:hover{border-color:var(--blue)}
+.rules{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:8px}
+.rules li{display:grid;grid-template-columns:62px 1fr;gap:10px;align-items:baseline;animation:rowIn .35s ease both}
+.rules .rn{font-family:var(--serif);color:var(--blue);font-size:15px}
+.note{font-size:14px;color:var(--muted);margin:12px 0 0}
+.panel{border:1px solid var(--line);background:var(--surface2);border-radius:12px;padding:18px 20px;margin-top:16px}
+
+/* ---------- zero detective ---------- */
+.fc-wrap{overflow-x:auto;margin-top:12px}
+#flow{width:100%;min-width:640px;display:block}
+.fc-node rect{fill:var(--surface2);stroke:var(--line);stroke-width:1.5;transition:fill .3s,stroke .3s}
+.fc-node text{font-family:var(--sans);font-size:15px;fill:var(--ink);text-anchor:middle;pointer-events:none}
+.fc-node.root rect{fill:var(--blue-soft);stroke:var(--blue)}
+.fc-node.term text{font-weight:700}
+.fc-node.term{opacity:.4;transition:opacity .4s}
+.fc-node.choosable{cursor:pointer}
+.fc-node.choosable rect{stroke:var(--blue);stroke-dasharray:5 4;animation:march 1s linear infinite}
+@keyframes march{to{stroke-dashoffset:-18}}
+.fc-node.choosable:hover rect,.fc-node.choosable:focus-visible rect{fill:var(--blue-soft)}
+.fc-node:focus{outline:none}
+.fc-node.on rect{fill:var(--blue);stroke:var(--blue);stroke-dasharray:none;animation:none}
+.fc-node.on text{fill:var(--on-blue)}
+.fc-node.term.on{opacity:1}
+.fc-node.term.on.always rect{fill:var(--good);stroke:var(--good)}
+.fc-node.term.on.never rect{fill:var(--bad);stroke:var(--bad)}
+.fc-node.term.on text{fill:var(--surface)}
+.fc-node.wrong rect{fill:var(--bad-soft);stroke:var(--bad)}
+.fc-node.wrong{animation:shakeSvg .4s ease}
+@keyframes shakeSvg{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+.fc-edge{fill:none;stroke:var(--line);stroke-width:2}
+.fc-edge.on{stroke:var(--blue);stroke-width:3.5;stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:draw .45s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+/* ---------- math ---------- */
+.math-grid{display:grid;grid-template-columns:minmax(280px,1fr) 1fr;gap:30px;align-items:start}
+.stack{display:inline-grid;grid-template-columns:1.2em auto auto auto;column-gap:0;row-gap:2px;font-family:var(--serif);font-size:clamp(26px,4vw,36px);align-items:center}
+.stack > span{padding:2px 0;animation:rowIn .4s ease both}
+.stack .op{color:var(--muted);text-align:center}
+.stack .int{justify-self:end}
+.stack .frac{justify-self:start}
+.stack .rule{grid-column:1/4;height:4px;background:var(--est);border-radius:2px;margin:4px 0 2px;padding:0;transform-origin:left;animation:barIn .5s ease .3s both}
+@keyframes barIn{from{transform:scaleX(0)}to{transform:none}}
+.stack .chipcell{padding-left:16px}
+.chip{display:inline-block;font-family:var(--sans);font-size:13px;line-height:1.3;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 9px;background:var(--surface);opacity:0;transform:translateX(-6px);transition:opacity .35s,transform .35s;transition-delay:var(--d,0ms);white-space:nowrap}
+.chip.show{opacity:1;transform:none}
+.chip.least{border-color:var(--est);background:var(--est-soft);color:var(--ink);font-weight:700}
+.expr{display:flex;flex-wrap:wrap;align-items:flex-start;gap:6px 14px;font-family:var(--serif);font-size:clamp(28px,4.4vw,40px)}
+.term{display:inline-flex;flex-direction:column;align-items:center;gap:6px;animation:rowIn .4s ease both}
+.opx{color:var(--muted)}
+.steps{margin:18px 0 0;padding-left:1.4em;display:grid;gap:10px}
+.steps li{animation:rowIn .45s ease both;padding-left:4px}
+.steps li::marker{font-family:var(--serif);color:var(--blue)}
+.dropped{text-decoration:line-through;color:var(--muted);opacity:.6;display:inline-block;animation:fadeDrop 1s ease .3s both}
+@keyframes fadeDrop{from{opacity:1;text-decoration-color:transparent}to{opacity:.55}}
+.big{font-family:var(--serif);font-size:1.3em}
+
+/* ---------- challenge ---------- */
+.q-top{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:14px;color:var(--muted)}
+.bar{height:6px;background:var(--surface2);border:1px solid var(--line);border-radius:99px;overflow:hidden;margin:8px 0 22px}
+.bar i{display:block;height:100%;background:var(--blue);width:0;transition:width .5s ease}
+.q-text{font-family:var(--serif);font-size:clamp(21px,2.6vw,26px);line-height:1.35;margin:0 0 16px;max-width:60ch}
+.q-extra{margin:-4px 0 16px}
+.lcd-row{display:flex;flex-wrap:wrap;gap:10px}
+.lcd{border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--surface2);font-size:13px;color:var(--muted);text-align:center}
+.lcd b{display:block;font-family:"Courier New",monospace;font-size:20px;color:var(--ink);background:var(--blue-soft);border-radius:4px;padding:2px 8px;margin-top:4px;font-weight:400}
+.q-card .choices{grid-template-columns:1fr 1fr}
+.q-card .choice{font-size:16px}
+.q-card .choice .mathy{font-family:var(--serif);font-size:19px}
+.result{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center}
+.ringwrap{position:relative;width:170px;height:170px}
+.ringwrap svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ringwrap .bg{fill:none;stroke:var(--surface2);stroke-width:14}
+.ringwrap .fg{fill:none;stroke:var(--est);stroke-width:14;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;transition:stroke-dashoffset 1.3s cubic-bezier(.3,.8,.3,1)}
+.ringwrap .lbl{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--serif);font-size:44px;line-height:1}
+.ringwrap .lbl small{font-family:var(--sans);font-size:13px;color:var(--muted);margin-top:4px}
+.review{margin:18px 0 0;padding:0;list-style:none;display:grid;gap:10px}
+.review li{border-left:3px solid var(--bad);padding:4px 0 4px 12px}
+.review .a{color:var(--good);font-weight:700}
+
+@media (max-width:820px){
+  .top{grid-template-columns:1fr;gap:18px;padding-top:24px}
+  .reading-hero{text-align:left}.reading-hero .num,.legend{justify-content:flex-start}
+  .acc-grid,.math-grid{grid-template-columns:1fr}
+  .ruler-row{grid-template-columns:1fr}
+  .lens{max-width:220px;margin:0 auto}
+  .station{padding:20px 16px 24px;border-radius:14px}
+  .st-head{flex-direction:column;gap:8px}
+}
+@media (max-width:520px){
+  .wrap{padding:0 12px 36px}
+  .choices,.q-card .choices{grid-template-columns:1fr}
+  .result{grid-template-columns:1fr;justify-items:start}
+  .rules li{grid-template-columns:1fr;gap:0}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;transition-delay:0ms !important;animation-delay:0ms !important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Measurement &amp; Significant Figures</h1>
+      <p>A review of accuracy, precision, uncertainty and recording data. Pick a station; every activity makes fresh practice each time you go again.</p>
+    </div>
+    <div class="reading-hero" aria-label="Example reading 3.21 centimetres: 3.2 are certain digits and the final 1 is the estimated digit">
+      <div class="num" aria-hidden="true"><span class="cert">3.2</span><span class="est">1</span><span class="unit">cm</span></div>
+      <div class="legend" aria-hidden="true"><span>certain digits</span><span class="e">one estimated digit</span></div>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Review stations">
+    <button class="tab" role="tab" id="t-accuracy" aria-controls="accuracy" data-target="accuracy">Accuracy &amp; precision</button>
+    <button class="tab" role="tab" id="t-instruments" aria-controls="instruments" data-target="instruments">Read the ruler</button>
+    <button class="tab" role="tab" id="t-count" aria-controls="count" data-target="count">Count sig figs</button>
+    <button class="tab" role="tab" id="t-zeros" aria-controls="zeros" data-target="zeros">Zero detective</button>
+    <button class="tab" role="tab" id="t-math" aria-controls="math" data-target="math">Calculations</button>
+    <button class="tab" role="tab" id="t-challenge" aria-controls="challenge" data-target="challenge">Challenge</button>
+  </nav>
+
+  <main>
+    <!-- ============ ACCURACY ============ -->
+    <section class="station" id="accuracy" role="tabpanel" aria-labelledby="t-accuracy">
+      <div class="st-head">
+        <div>
+          <h2>Accuracy and precision</h2>
+          <p>Accuracy is how close measurements are to the accepted value. Precision is how reproducible they are. Classify each set.</p>
+        </div>
+        <output class="score" id="acc-score">No answers yet</output>
+      </div>
+      <div class="seg" role="group" aria-label="Practice type" id="acc-seg">
+        <button type="button" data-mode="target" aria-pressed="true">Targets</button>
+        <button type="button" data-mode="lab" aria-pressed="false">Lab data</button>
+      </div>
+      <div class="acc-grid">
+        <div>
+          <div id="acc-target">
+            <svg id="target" viewBox="-160 -160 320 320" role="img" aria-label="Target with five darts">
+              <circle class="rim" r="153"/>
+              <circle class="ring-r" r="150"/><circle class="ring-w" r="120"/><circle class="ring-r" r="90"/><circle class="ring-w" r="60"/><circle class="ring-r" r="30"/>
+              <g id="markers"></g>
+              <g id="darts"></g>
+            </svg>
+            <p class="cap">The bullseye is the accepted value.</p>
+          </div>
+          <div id="acc-lab" hidden></div>
+        </div>
+        <div>
+          <p class="ask">How would you describe this set of measurements?</p>
+          <div class="choices" id="acc-choices">
+            <button type="button" class="choice" data-v="ap">Accurate and precise</button>
+            <button type="button" class="choice" data-v="pna">Precise, not accurate</button>
+            <button type="button" class="choice" data-v="anp">Accurate, not precise</button>
+            <button type="button" class="choice" data-v="nn">Neither accurate nor precise</button>
+          </div>
+          <div class="feedback" id="acc-fb" aria-live="polite"></div>
+          <div class="row" style="margin-top:16px"><button type="button" class="btn ghost" id="acc-next">Throw again</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ INSTRUMENTS ============ -->
+    <section class="station" id="instruments" role="tabpanel" aria-labelledby="t-instruments" hidden>
+      <div class="st-head">
+        <div>
+          <h2>Read the ruler</h2>
+          <p>Record every certain digit plus one estimated digit. The marks on the ruler decide how many digits that is.</p>
+        </div>
+        <output class="score" id="ins-score">No answers yet</output>
+      </div>
+      <div class="seg" role="group" aria-label="Choose a ruler" id="ins-seg">
+        <button type="button" data-mode="A" aria-pressed="false">Ruler A: no marks between 0 and 10</button>
+        <button type="button" data-mode="B" aria-pressed="true">Ruler B: marks every 1 cm</button>
+        <button type="button" data-mode="C" aria-pressed="false">Ruler C: marks every 0.1 cm</button>
+      </div>
+      <div class="ruler-row">
+        <div class="ruler-wrap"><svg id="ruler" viewBox="0 0 760 126" role="img" aria-label="Ruler with a wooden splint lying along it"><g id="ruler-scene"></g></svg></div>
+        <figure class="lens" id="lens-fig"><svg id="lens" viewBox="0 0 110 110" aria-hidden="true"><g id="lens-scene"></g></svg><figcaption>Close-up of the end of the splint</figcaption></figure>
+      </div>
+      <div class="ins-answer">
+        <div>
+          <label class="lbl" for="ins-input">Length of the splint</label>
+          <span class="inp"><input class="num" id="ins-input" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="?"> cm</span>
+        </div>
+        <button type="button" class="btn" id="ins-check">Check</button>
+        <button type="button" class="btn ghost" id="ins-next">New splint</button>
+      </div>
+      <div class="feedback" id="ins-fb" aria-live="polite"></div>
+    </section>
+
+    <!-- ============ COUNT ============ -->
+    <section class="station" id="count" role="tabpanel" aria-labelledby="t-count" hidden>
+      <div class="st-head">
+        <div>
+          <h2>Count significant figures</h2>
+          <p>Type any number to see which digits count and why, or switch to practice and tap the significant digits yourself.</p>
+        </div>
+        <output class="score" id="cnt-score">No answers yet</output>
+      </div>
+      <div class="seg" role="group" aria-label="Mode" id="cnt-seg">
+        <button type="button" data-mode="tap" aria-pressed="true">Tap the sig figs</button>
+        <button type="button" data-mode="an" aria-pressed="false">Analyze a number</button>
+      </div>
+      <div id="cnt-tap">
+        <p class="ask">Tap every significant digit, then check.</p>
+        <div class="digits" id="tap-digits"></div>
+        <div class="row" style="margin-top:14px">
+          <button type="button" class="btn" id="tap-check">Check</button>
+          <button type="button" class="btn ghost" id="tap-next">New number</button>
+        </div>
+        <div class="feedback" id="tap-fb" aria-live="polite"></div>
+      </div>
+      <div id="cnt-an" hidden>
+        <label class="lbl" for="an-input">Number (scientific notation works too, like 5.20 x 10^4)</label>
+        <div class="row">
+          <input class="num" id="an-input" style="width:260px" autocomplete="off" spellcheck="false" value="501.040">
+          <button type="button" class="btn" id="an-go">Analyze</button>
+        </div>
+        <div class="presets" id="an-presets" aria-label="Examples from the slides"></div>
+        <div class="panel">
+          <div class="digits" id="an-digits" aria-live="polite"></div>
+          <p class="count" id="an-count"></p>
+          <ul class="rules" id="an-rules"></ul>
+          <p class="note" id="an-note"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ZERO DETECTIVE ============ -->
+    <section class="station" id="zeros" role="tabpanel" aria-labelledby="t-zeros" hidden>
+      <div class="st-head">
+        <div>
+          <h2>Zero detective</h2>
+          <p>Is the highlighted digit significant? Follow the summary flowchart: click the box that describes the digit at each step.</p>
+        </div>
+        <output class="score" id="z-score">No answers yet</output>
+      </div>
+      <div class="digits" id="z-digits"></div>
+      <div class="fc-wrap"><svg id="flow" viewBox="0 0 760 440" role="group" aria-label="Significant figures flowchart"></svg></div>
+      <div class="feedback" id="z-fb" aria-live="polite"></div>
+      <div class="row" style="margin-top:14px"><button type="button" class="btn ghost" id="z-next">Next number</button></div>
+    </section>
+
+    <!-- ============ MATH ============ -->
+    <section class="station" id="math" role="tabpanel" aria-labelledby="t-math" hidden>
+      <div class="st-head">
+        <div>
+          <h2>Calculations with sig figs</h2>
+          <p>A calculated answer can never be more precise than the measurements it came from. Solve, then round correctly.</p>
+        </div>
+        <output class="score" id="m-score">No answers yet</output>
+      </div>
+      <div class="seg" role="group" aria-label="Operation" id="m-seg">
+        <button type="button" data-mode="add" aria-pressed="true">Add and subtract</button>
+        <button type="button" data-mode="mul" aria-pressed="false">Multiply and divide</button>
+      </div>
+      <div class="math-grid">
+        <div>
+          <p class="ask" id="m-rule"></p>
+          <div id="m-problem"></div>
+          <div style="margin-top:22px">
+            <label class="lbl" for="m-input">Your answer, rounded correctly</label>
+            <div class="row">
+              <input class="num" id="m-input" inputmode="decimal" autocomplete="off" spellcheck="false">
+              <button type="button" class="btn" id="m-check">Check</button>
+            </div>
+            <div class="row" style="margin-top:10px">
+              <button type="button" class="btn ghost" id="m-steps">Show the steps</button>
+              <button type="button" class="btn ghost" id="m-next">New problem</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="feedback" id="m-fb" aria-live="polite"></div>
+          <ol class="steps" id="m-steplist"></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CHALLENGE ============ -->
+    <section class="station" id="challenge" role="tabpanel" aria-labelledby="t-challenge" hidden>
+      <div class="st-head">
+        <div>
+          <h2>Challenge round</h2>
+          <p>Ten mixed questions from the whole deck. Each answer comes with an explanation.</p>
+        </div>
+        <output class="score" id="best">Best: none yet</output>
+      </div>
+      <div id="q-area"></div>
+    </section>
+  </main>
+</div>
+
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const rand = (a, b) => a + Math.random() * (b - a);
+const ri = (a, b) => Math.floor(rand(a, b + 1));
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const RM = matchMedia('(prefers-reduced-motion: reduce)');
+const NS = 'http://www.w3.org/2000/svg';
+const sv = (tag, attrs = {}, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; };
+const hx = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const sup = n => String(n).replace('-', '−');
+
+function scorer(node) {
+  let c = 0, t = 0;
+  return ok => { t++; if (ok) c++; node.textContent = `${c} of ${t} correct`; node.classList.remove('bump'); void node.offsetWidth; node.classList.add('bump'); };
+}
+function feedback(node, ok, html) { node.className = 'feedback show ' + (ok === true ? 'ok' : ok === false ? 'no' : 'info'); node.innerHTML = html; }
+function clearFb(node) { node.className = 'feedback'; node.innerHTML = ''; }
+function seg(group, onChange) {
+  $$('button', group).forEach(b => b.addEventListener('click', () => {
+    $$('button', group).forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    onChange(b.dataset.mode);
+  }));
+}
+function onEnter(input, fn) { input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); fn(); } }); }
+
+/* ================= tabs ================= */
+const tabs = $$('.tab'), stations = $$('.station');
+function showStation(id, focusTab) {
+  if (!stations.some(s => s.id === id)) id = 'accuracy';
+  tabs.forEach(t => { const on = t.dataset.target === id; t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; if (on && focusTab) t.focus(); });
+  stations.forEach(s => { s.hidden = s.id !== id; });
+  try { history.replaceState(null, '', '#' + id); } catch (e) {}
+}
+tabs.forEach((t, i) => {
+  t.addEventListener('click', () => showStation(t.dataset.target));
+  t.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const n = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+      showStation(n.dataset.target, true);
+    }
+  });
+});
+window.addEventListener('hashchange', () => showStation(location.hash.slice(1)));
+
+/* ================= significant-figure engine ================= */
+const RULES = {
+  nonzero:    { rule: 1, sig: true,  tag: 'nonzero',          text: 'Nonzero digits are always significant.' },
+  between:    { rule: 2, sig: true,  tag: 'between nonzeros', text: 'Zeros between nonzero digits are always significant.' },
+  trailDec:   { rule: 3, sig: true,  tag: 'end, after decimal', text: 'Zeros at the end of a number and to the right of the decimal point are always significant.' },
+  trailPoint: { rule: 4, sig: true,  tag: 'decimal written',  text: 'Zeros to the left of a written decimal point in a number ≥ 10 are significant.' },
+  leading:    { rule: 6, sig: false, tag: 'placeholder',      text: 'Leading zeros are placeholders and are never significant.' },
+  trailNo:    { rule: 7, sig: false, tag: 'no decimal point', text: 'Trailing zeros with no decimal point are not significant.' },
+};
+function parseNumber(raw) {
+  const s = String(raw).trim().replace(/[×✕·]/g, 'x').replace(/−/g, '-').replace(/\s+/g, ' ');
+  const m = s.match(/^([+-]?)\s*(\d[\d, ]*\.?\d*|\.\d+)\s*(?:(?:x|\*)\s*10\s*\^?\s*\(?\s*([+-]?\d+)\s*\)?|[eE]([+-]?\d+))?$/i);
+  if (!m) return null;
+  const coef = m[2].trim();
+  if (/[, ]$/.test(coef) || /[, ][, ]/.test(coef) || /\.[\d]*[, ]/.test(coef)) return null;
+  const exp = m[3] != null ? m[3] : (m[4] != null ? m[4] : null);
+  return { sign: m[1], coef, exp: exp != null ? String(parseInt(exp, 10)) : null };
+}
+function analyze(coef) {
+  const chars = [...coef];
+  const hasPoint = coef.includes('.');
+  const pointAt = coef.indexOf('.');
+  const nz = chars.map((c, i) => (/[1-9]/.test(c) ? i : -1)).filter(i => i >= 0);
+  if (!nz.length) return null;
+  const first = nz[0], last = nz[nz.length - 1];
+  const tokens = chars.map((c, i) => {
+    if (c === '.') return { ch: c, type: 'point' };
+    if (!/\d/.test(c)) return { ch: c, type: 'sep' };
+    let reason;
+    if (c !== '0') reason = 'nonzero';
+    else if (i < first) reason = 'leading';
+    else if (i < last) reason = 'between';
+    else if (!hasPoint) reason = 'trailNo';
+    else reason = i > pointAt ? 'trailDec' : 'trailPoint';
+    return { ch: c, type: 'digit', reason, sig: RULES[reason].sig };
+  });
+  return { tokens, hasPoint, count: tokens.filter(t => t.sig).length };
+}
+function toSci(coef, an) {
+  const digits = [], pos = [];
+  let before = 0, seenPoint = false;
+  an.tokens.forEach(t => { if (t.type === 'point') seenPoint = true; if (t.type === 'digit') { digits.push(t); if (!seenPoint) before++; } });
+  const f = digits.findIndex(t => t.sig);
+  let l = -1; digits.forEach((t, i) => { if (t.sig) l = i; });
+  const m = digits.slice(f, l + 1).map(t => t.ch).join('');
+  const exp = before - f - 1;
+  return { mant: m.length > 1 ? m[0] + '.' + m.slice(1) : m, exp };
+}
+function countOf(str) { const p = parseNumber(str); if (!p) return null; const a = analyze(p.coef); return a ? a.count : null; }
+function genNumber() {
+  const d = () => ri(1, 9), dz = () => ri(0, 9), coin = () => Math.random() < 0.5;
+  switch (ri(0, 7)) {
+    case 0: return '0.' + '0'.repeat(ri(1, 3)) + d() + (coin() ? dz() : '') + (coin() ? '0' : '');
+    case 1: return '' + d() + '0'.repeat(ri(1, 2)) + d() + (coin() ? d() : '');
+    case 2: return '' + d() + (coin() ? d() : '') + '0'.repeat(ri(2, 4));
+    case 3: return '' + d() + (coin() ? dz() : '') + '.' + dz() + d() + '0'.repeat(ri(1, 2));
+    case 4: return '' + d() + '0'.repeat(ri(1, 2)) + '.';
+    case 5: return '' + d() + '0'.repeat(ri(1, 2)) + '.0' + d();
+    case 6: return '' + d() + '0.0' + (coin() ? '0' : '');
+    default: return '0.' + d() + '0' + d() + (coin() ? '0' : '');
+  }
+}
+function renderNumber(box, parsed, an, opts = {}) {
+  box.innerHTML = '';
+  let k = 0;
+  const add = (cls, html, isBtn) => {
+    const t = hx(isBtn ? 'button' : 'span', 'tile ' + cls);
+    if (isBtn) { t.type = 'button'; t.setAttribute('aria-pressed', 'false'); }
+    t.style.setProperty('--d', (k++ * 45) + 'ms');
+    t.innerHTML = html;
+    box.appendChild(t);
+    return t;
+  };
+  if (parsed.sign === '-') add('sep', '<span class="g">−</span>');
+  an.tokens.forEach((t, i) => {
+    if (t.type === 'digit') {
+      t.node = add('digit', `<span class="g">${t.ch}</span><span class="tag"></span>`, !!opts.tap);
+      if (opts.tap) t.node.setAttribute('aria-label', `digit ${t.ch}, position ${i + 1}`);
+    } else if (t.type === 'point') add('point', '<span class="g">.</span>');
+    else add('sep', `<span class="g">${t.ch === ',' ? ',' : '&nbsp;'}</span>`);
+  });
+  if (parsed.exp != null) add('sci', `<span class="g">× 10<sup>${sup(parsed.exp)}</sup></span>`);
+}
+function revealSig(an, start = 300) {
+  an.tokens.filter(t => t.type === 'digit').forEach((t, k) => {
+    t.node.style.setProperty('--d2', (start + k * 80) + 'ms');
+    t.node.querySelector('.tag').textContent = RULES[t.reason].tag;
+    t.node.classList.add(t.sig ? 'sig' : 'nsig');
+  });
+}
+function rulesUsed(an) {
+  const seen = [...new Set(an.tokens.filter(t => t.type === 'digit').map(t => t.reason))];
+  return seen.sort((a, b) => RULES[a].rule - RULES[b].rule);
+}
+
+/* ================= 1. ACCURACY ================= */
+const ACC = {
+  ap:  { label: 'accurate and precise', why: 'The measurements agree closely with each other (precise), and their average sits on the accepted value (accurate).' },
+  pna: { label: 'precise, not accurate', why: 'The measurements agree closely with each other, so they are precise, but the whole group misses the accepted value. Reproducible does not mean correct.' },
+  anp: { label: 'accurate, not precise', why: 'The measurements are spread out, so they are not precise, but they scatter evenly around the accepted value, so their average is accurate.' },
+  nn:  { label: 'neither accurate nor precise', why: 'The measurements are spread out, and their average is far from the accepted value.' },
+};
+const LAB = [
+  { name: 'Density of aluminum', acc: 2.70, unit: 'g/cm³', dp: 2 },
+  { name: 'Boiling point of water at sea level', acc: 100.0, unit: '°C', dp: 1 },
+  { name: 'Molar mass of sodium chloride', acc: 58.44, unit: 'g/mol', dp: 2 },
+  { name: 'Density of copper', acc: 8.96, unit: 'g/cm³', dp: 2 },
+  { name: 'Specific heat of water', acc: 4.18, unit: 'J/(g·°C)', dp: 2 },
+];
+const accScore = scorer($('#acc-score'));
+const dartsG = $('#darts'), markG = $('#markers'), accFb = $('#acc-fb');
+let accMode = 'target', accType = null, accDone = false, accPts = [], accLab = null;
+
+function cluster(cx, cy, s, n = 5) {
+  return Array.from({ length: n }, () => { const a = rand(0, Math.PI * 2), r = Math.sqrt(Math.random()) * s; return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; });
+}
+function ringPts(cx, cy, rmin, rmax, n = 5) {
+  const b = rand(0, Math.PI * 2);
+  const pts = Array.from({ length: n }, (_, i) => { const a = b + i * 2 * Math.PI / n + rand(-.3, .3), r = rand(rmin, rmax); return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; });
+  const mx = pts.reduce((s, p) => s + p[0], 0) / n, my = pts.reduce((s, p) => s + p[1], 0) / n;
+  return pts.map(p => [p[0] - mx + cx, p[1] - my + cy]).map(([x, y]) => { const d = Math.hypot(x, y); return d > 142 ? [x * 142 / d, y * 142 / d] : [x, y]; });
+}
+function genDarts(t) {
+  const a = rand(0, Math.PI * 2);
+  if (t === 'ap') return cluster(rand(-5, 5), rand(-5, 5), 15);
+  if (t === 'pna') { const R = rand(88, 115); return cluster(R * Math.cos(a), R * Math.sin(a), 14); }
+  if (t === 'anp') return ringPts(rand(-5, 5), rand(-5, 5), 70, 125);
+  const R = rand(70, 88); return ringPts(R * Math.cos(a), R * Math.sin(a), 32, 55);
+}
+function genLab(t) {
+  const L = pick(LAB);
+  const small = L.acc * 0.004, big = L.acc * 0.06, off = L.acc * rand(0.07, 0.11) * (Math.random() < .5 ? -1 : 1);
+  const center = L.acc + (t === 'pna' || t === 'nn' ? off : 0);
+  const spread = (t === 'anp' || t === 'nn') ? big : small;
+  let vals;
+  if (spread === small) vals = Array.from({ length: 4 }, () => center + rand(-1, 1) * spread);
+  else {
+    const base = [-1, -0.35, 0.4, 0.95].map(f => f * spread);
+    const m = base.reduce((a, b) => a + b) / 4;
+    vals = shuffle(base.map(b => center + b - m + rand(-.04, .04) * spread));
+  }
+  return { L, vals: vals.map(v => v.toFixed(L.dp)) };
+}
+function resetChoices() { $$('#acc-choices .choice').forEach(b => { b.disabled = false; b.classList.remove('right', 'wrong'); }); }
+function newAcc() {
+  accType = pick(Object.keys(ACC)); accDone = false; resetChoices(); clearFb(accFb);
+  if (accMode === 'target') {
+    dartsG.innerHTML = ''; markG.innerHTML = '';
+    accPts = genDarts(accType);
+    accPts.forEach(([x, y], i) => {
+      const g = sv('g', { class: 'dart' }, dartsG);
+      sv('circle', { r: 7.5, class: 'dart-head' }, g);
+      sv('circle', { r: 2.6, class: 'dart-dot' }, g);
+      if (RM.matches) { g.style.transform = `translate(${x}px,${y}px)`; return; }
+      g.style.opacity = '0';
+      g.style.transform = `translate(${x * .4}px,${y - 320}px) scale(2.6)`;
+      setTimeout(() => {
+        g.style.transition = 'transform .55s cubic-bezier(.3,1.45,.5,1), opacity .2s';
+        g.style.transform = `translate(${x}px,${y}px) scale(1)`;
+        g.style.opacity = '1';
+      }, 80 + i * 150);
+    });
+  } else {
+    accLab = genLab(accType);
+    const box = $('#acc-lab');
+    box.innerHTML = `<div class="lab-card"><h3>${esc(accLab.L.name)}</h3><p class="acc-val">Accepted value: <span class="reading">${accLab.L.acc.toFixed(accLab.L.dp)}</span> ${accLab.L.unit}</p>
+      <table><thead><tr><th>Trial</th><th>Measured value (${accLab.L.unit})</th></tr></thead><tbody>
+      ${accLab.vals.map((v, i) => `<tr style="animation-delay:${i * 110}ms"><td>${i + 1}</td><td>${v}</td></tr>`).join('')}
+      </tbody></table><div id="lab-stats"></div></div>`;
+  }
+}
+function showSpread() {
+  const n = accPts.length;
+  const mx = accPts.reduce((s, p) => s + p[0], 0) / n, my = accPts.reduce((s, p) => s + p[1], 0) / n;
+  const r = Math.max(...accPts.map(p => Math.hypot(p[0] - mx, p[1] - my))) + 12;
+  const sh = sv('circle', { cx: mx, cy: my, r, class: 'spread-halo' }, markG);
+  const c = sv('circle', { cx: mx, cy: my, r, class: 'spread', pathLength: 100 }, markG);
+  const d = `M${mx - 11},${my}H${mx + 11}M${mx},${my - 11}V${my + 11}`;
+  const halo = sv('path', { d, class: 'mean-halo' }, dartsG);
+  const cross = sv('path', { d, class: 'mean' }, dartsG);
+  requestAnimationFrame(() => requestAnimationFrame(() => { c.classList.add('drawn'); sh.classList.add('drawn'); cross.classList.add('drawn'); halo.classList.add('drawn'); }));
+}
+$$('#acc-choices .choice').forEach(b => b.addEventListener('click', () => {
+  if (accDone) return; accDone = true;
+  const ok = b.dataset.v === accType;
+  b.classList.add(ok ? 'right' : 'wrong');
+  if (!ok) $(`#acc-choices [data-v="${accType}"]`).classList.add('right');
+  $$('#acc-choices .choice').forEach(x => x.disabled = true);
+  accScore(ok);
+  let extra = '';
+  if (accMode === 'target') {
+    showSpread();
+    extra = '<p>The orange circle shows the spread (precision); the cross marks the average position (accuracy).</p>';
+  } else {
+    const L = accLab.L, nums = accLab.vals.map(Number);
+    const avg = nums.reduce((a, b) => a + b) / nums.length;
+    const err = avg - L.acc, range = Math.max(...nums) - Math.min(...nums);
+    extra = `<p>Average = ${avg.toFixed(L.dp)} ${L.unit}. Error = measured − accepted = ${err >= 0 ? '' : '−'}${Math.abs(err).toFixed(L.dp)} ${L.unit}. Spread from lowest to highest trial = ${range.toFixed(L.dp)} ${L.unit}.</p>`;
+  }
+  feedback(accFb, ok, `<p><strong>${ok ? 'Correct.' : 'Not quite. This set is ' + ACC[accType].label + '.'}</strong> ${ACC[accType].why}</p>${extra}`);
+}));
+$('#acc-next').addEventListener('click', newAcc);
+seg($('#acc-seg'), m => {
+  accMode = m;
+  $('#acc-target').hidden = m !== 'target'; $('#acc-lab').hidden = m !== 'lab';
+  $('#acc-next').textContent = m === 'target' ? 'Throw again' : 'New data set';
+  newAcc();
+});
+
+/* ================= 2. INSTRUMENTS ================= */
+const RULER = {
+  A: { dp: 0, tol: 0.8, why: 'Ruler A has no marks between 0 and 10 cm, so the ones digit is already the estimate: record 0 decimal places.' },
+  B: { dp: 1, tol: 0.12, why: 'Ruler B is marked every 1 cm. The ones digit is certain and you estimate the tenths: record 1 decimal place.' },
+  C: { dp: 2, tol: 0.02, why: 'Ruler C is marked every 0.1 cm. The ones and tenths are certain and you estimate the hundredths: record 2 decimal places.' },
+};
+const X = cm => 34 + cm * 66;
+const insScore = scorer($('#ins-score'));
+let insType = 'B', insL = 0, insOnMark = false, insAnswered = false;
+function drawRuler(g, type, L) {
+  g.innerHTML = '';
+  sv('rect', { x: 10, y: 10, width: 740, height: 64, rx: 4, class: 'ruler-body' }, g);
+  const ticks = [];
+  if (type === 'A') ticks.push([0, 30, '0'], [10, 30, '10']);
+  if (type === 'B') for (let i = 0; i <= 10; i++) ticks.push([i, 28, String(i)]);
+  if (type === 'C') for (let i = 0; i <= 100; i++) ticks.push([i / 10, i % 10 === 0 ? 28 : i % 5 === 0 ? 19 : 11, i % 10 === 0 ? String(i / 10) : null]);
+  sv('path', { d: ticks.map(([cm, len]) => `M${X(cm)},10v${len}`).join(''), class: 'tick' }, g);
+  ticks.forEach(([cm, , lab]) => { if (lab != null) { const t = sv('text', { x: X(cm), y: 60, 'text-anchor': 'middle', class: 'tlabel' }, g); t.textContent = lab; } });
+  const cmT = sv('text', { x: 744, y: 66, 'text-anchor': 'end', class: 'tlabel' }, g); cmT.textContent = 'cm';
+  const sp = sv('g', { class: 'splint' }, g);
+  sv('rect', { x: X(0), y: 84, width: L * 66, height: 30, rx: 2, class: 'splint-body' }, sp);
+  if (L > 0.5) sv('path', { d: `M${X(0) + 6},93H${X(L) - 8}M${X(0) + 14},101.5H${X(L) - 18}M${X(0) + 4},108H${X(L) - 24}`, class: 'grain' }, sp);
+  return sp;
+}
+function newSplint() {
+  insOnMark = Math.random() < 0.22;
+  if (insType === 'A') { insOnMark = false; insL = Math.round(rand(1.2, 8.8) * 10) / 10; }
+  if (insType === 'B') insL = insOnMark ? ri(2, 9) : Math.round(rand(1.3, 9.4) * 100) / 100;
+  if (insType === 'C') insL = insOnMark ? ri(15, 95) / 10 : Math.round(rand(1.3, 9.4) * 1000) / 1000;
+  insAnswered = false;
+  const sp = drawRuler($('#ruler-scene'), insType, insL);
+  drawRuler($('#lens-scene'), insType, insL);
+  const cx = X(insL);
+  $('#lens').setAttribute('viewBox', `${cx - 56} 6 112 112`);
+  const fig = $('#lens-fig'); fig.classList.remove('on');
+  if (!RM.matches) {
+    sp.style.transform = 'scaleX(0)';
+    requestAnimationFrame(() => requestAnimationFrame(() => { sp.style.transition = 'transform .9s cubic-bezier(.2,.8,.2,1)'; sp.style.transform = 'scaleX(1)'; }));
+  }
+  setTimeout(() => fig.classList.add('on'), RM.matches ? 0 : 850);
+  $('#ins-input').value = ''; clearFb($('#ins-fb'));
+}
+function colorReading(s) { return `<span class="cert">${esc(s.slice(0, -1))}</span><span class="est">${esc(s.slice(-1))}</span>`; }
+function checkIns() {
+  const raw = $('#ins-input').value.trim().replace(/\s*cm$/i, '').replace(',', '.');
+  const fb = $('#ins-fb');
+  if (!/^(\d+(\.\d+)?|\.\d+)$/.test(raw)) { feedback(fb, null, '<p>Type the length as a number, such as 4.3</p>'); return; }
+  const R = RULER[insType], v = Number(raw), dp = raw.includes('.') ? raw.split('.')[1].length : 0;
+  const f = 10 ** R.dp;
+  const lo = Math.ceil((insL - R.tol) * f - 1e-9) / f, hi = Math.floor((insL + R.tol) * f + 1e-9) / f;
+  const range = `${lo.toFixed(R.dp)} to ${hi.toFixed(R.dp)} cm`;
+  const best = insL.toFixed(R.dp);
+  let ok = false, msg;
+  if (dp < R.dp) {
+    msg = insOnMark && Math.abs(v - insL) < 1e-9
+      ? `<p><strong>Almost.</strong> The splint lines up exactly on a mark, so the estimated digit is a 0, and it still has to be written: <span class="reading">${colorReading(best)}</span> cm.</p><p>${R.why}</p>`
+      : `<p><strong>Too few digits.</strong> ${R.why} A reading of about <span class="reading">${colorReading(best)}</span> cm would be valid.</p>`;
+  } else if (dp > R.dp) {
+    msg = `<p><strong>Too many digits.</strong> ${R.why} Any digit past the estimated one is a guess this ruler cannot support. A valid reading is about <span class="reading">${colorReading(best)}</span> cm.</p>`;
+  } else if (v < lo - 1e-9 || v > hi + 1e-9) {
+    msg = `<p><strong>Right number of digits, but the reading is off.</strong> Check the close-up. Valid readings run from ${range}.</p>`;
+  } else {
+    ok = true;
+    msg = `<p><strong>Valid measurement.</strong> <span class="reading">${colorReading(raw)}</span> cm: the black digits are certain, the orange digit is your estimate.</p><p>${R.why} Different people may estimate differently, so anything from ${range} is acceptable.</p>`;
+  }
+  if (!insAnswered) { insScore(ok); insAnswered = true; }
+  feedback(fb, ok, msg);
+}
+$('#ins-check').addEventListener('click', checkIns);
+onEnter($('#ins-input'), checkIns);
+$('#ins-next').addEventListener('click', newSplint);
+seg($('#ins-seg'), m => { insType = m; newSplint(); });
+
+/* ================= 3. COUNT ================= */
+const cntScore = scorer($('#cnt-score'));
+let tapAn = null, tapDone = false;
+function newTap() {
+  const p = parseNumber(genNumber());
+  tapAn = analyze(p.coef); tapDone = false;
+  renderNumber($('#tap-digits'), p, tapAn, { tap: true });
+  $$('#tap-digits button.tile').forEach(b => b.addEventListener('click', () => { if (tapDone) return; b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true')); }));
+  clearFb($('#tap-fb'));
+  $('#tap-check').disabled = false;
+}
+function checkTap() {
+  if (tapDone) return; tapDone = true;
+  let ok = true, missed = false, extra = false;
+  tapAn.tokens.filter(t => t.type === 'digit').forEach((t, k) => {
+    const picked = t.node.getAttribute('aria-pressed') === 'true';
+    let cls = 'skip';
+    if (picked && t.sig) cls = 'hit';
+    else if (!picked && t.sig) { cls = 'miss'; ok = false; missed = true; }
+    else if (picked && !t.sig) { cls = 'wrongpick'; ok = false; extra = true; }
+    t.node.style.setProperty('--d2', (k * 70) + 'ms');
+    t.node.classList.add(cls, 'showtag');
+    t.node.querySelector('.tag').textContent = RULES[t.reason].tag;
+  });
+  cntScore(ok);
+  $('#tap-check').disabled = true;
+  const used = rulesUsed(tapAn).map(r => `<li><span class="rn">Rule ${RULES[r].rule}</span><span>${RULES[r].text}</span></li>`).join('');
+  feedback($('#tap-fb'), ok, `<p><strong>${ok ? 'Correct.' : 'Not quite.'}</strong> This number has <strong>${tapAn.count}</strong> significant figure${tapAn.count === 1 ? '' : 's'}.${missed ? ' Orange dashed digits are significant digits you missed.' : ''}${extra ? ' Struck-through digits are not significant.' : ''}</p><ul class="rules">${used}</ul>`);
+}
+$('#tap-check').addEventListener('click', checkTap);
+$('#tap-next').addEventListener('click', newTap);
+
+const PRESETS = ['48,923', '3.967', '900.06', '0.0004', '8.1000', '501.040', '3 000 000', '10.0', '40.1', '0.56', '5.20 x 10^4', '42000', '63.10'];
+const anIn = $('#an-input');
+PRESETS.forEach(p => { const b = hx('button', 'chip-btn', esc(p)); b.type = 'button'; b.addEventListener('click', () => { anIn.value = p; runAn(); }); $('#an-presets').appendChild(b); });
+function runAn() {
+  const box = $('#an-digits'), cnt = $('#an-count'), rl = $('#an-rules'), note = $('#an-note');
+  const p = parseNumber(anIn.value);
+  const an = p && analyze(p.coef);
+  if (!an) { box.innerHTML = ''; rl.innerHTML = ''; note.textContent = ''; cnt.textContent = 'Enter a number with at least one nonzero digit, such as 0.00340 or 2.50 x 10^3.'; return; }
+  renderNumber(box, p, an);
+  revealSig(an, an.tokens.length * 45 + 150);
+  const n = an.count;
+  cnt.innerHTML = `<b>${n}</b> significant figure${n === 1 ? '' : 's'}`;
+  const used = rulesUsed(an);
+  let items = used.map((r, i) => `<li style="animation-delay:${600 + i * 120}ms"><span class="rn">Rule ${RULES[r].rule}</span><span>${RULES[r].text}</span></li>`);
+  if (p.exp != null) items.push(`<li style="animation-delay:${600 + used.length * 120}ms"><span class="rn">Rule 5</span><span>In scientific notation, every digit to the left of the × is significant.</span></li>`);
+  rl.innerHTML = items.join('');
+  if (p.exp == null) {
+    const s = toSci(p.coef, an);
+    const dropped = an.tokens.some(t => t.type === 'digit' && !t.sig);
+    let txt = `Check with scientific notation: ${p.sign === '-' ? '−' : ''}${s.mant} × 10<sup>${sup(s.exp)}</sup>.${dropped ? ' The zeros you had to drop to write it were not significant.' : ' Every digit survives, so every digit is significant.'}`;
+    if (used.includes('trailNo')) txt += ' To show trailing zeros were measured, write a decimal point or use scientific notation.';
+    note.innerHTML = txt;
+  } else note.innerHTML = '';
+}
+$('#an-go').addEventListener('click', runAn);
+onEnter(anIn, runAn);
+seg($('#cnt-seg'), m => { $('#cnt-tap').hidden = m !== 'tap'; $('#cnt-an').hidden = m !== 'an'; if (m === 'an') runAn(); else newTap(); });
+
+/* ================= 4. ZERO DETECTIVE ================= */
+const FC = {
+  root:    { x: 380, y: 34,  w: 260, t: ['Look at the highlighted digit'] },
+  zero:    { x: 240, y: 124, w: 120, t: ['0'], p: 'root' },
+  nz:      { x: 680, y: 124, w: 130, t: ['1, 2, 3 … 9'], p: 'root' },
+  front:   { x: 85,  y: 214, w: 130, t: ['At the front', 'of the number'], p: 'zero' },
+  between: { x: 240, y: 214, w: 150, t: ['Between', 'nonzero digits'], p: 'zero' },
+  end:     { x: 465, y: 214, w: 140, t: ['At the end', 'of the number'], p: 'zero' },
+  point:   { x: 390, y: 304, w: 130, t: ['Decimal point', 'is written'], p: 'end' },
+  nopoint: { x: 540, y: 304, w: 130, t: ['No decimal', 'point'], p: 'end' },
+  Tfront:   { x: 85,  y: 404, w: 130, t: ['Never', 'significant'], p: 'front', term: 'never' },
+  Tbetween: { x: 240, y: 404, w: 130, t: ['Always', 'significant'], p: 'between', term: 'always' },
+  Tpoint:   { x: 390, y: 404, w: 130, t: ['Always', 'significant'], p: 'point', term: 'always' },
+  Tnopoint: { x: 540, y: 404, w: 130, t: ['Never', 'significant'], p: 'nopoint', term: 'never' },
+  Tnz:      { x: 680, y: 404, w: 130, t: ['Always', 'significant'], p: 'nz', term: 'always' },
+};
+const CHILD = { root: ['zero', 'nz'], zero: ['front', 'between', 'end'], end: ['point', 'nopoint'] };
+const PATH = { nonzero: ['nz'], leading: ['zero', 'front'], between: ['zero', 'between'], trailDec: ['zero', 'end', 'point'], trailPoint: ['zero', 'end', 'point'], trailNo: ['zero', 'end', 'nopoint'] };
+const HINT = [
+  'Start with the digit itself: is it a zero, or one of 1 to 9?',
+  'Where does this zero sit? Before the first nonzero digit is the front; after the last nonzero digit is the end.',
+  'Look at the whole number: is a decimal point written anywhere in it?',
+];
+const flow = $('#flow'), H2 = 27;
+const fcNodes = {}, fcEdges = {};
+Object.entries(FC).forEach(([id, n]) => {
+  if (n.p) {
+    const P = FC[n.p], y1 = P.y + H2, y2 = n.y - H2, mid = (y1 + y2) / 2;
+    const path = sv('path', { d: `M${P.x},${y1}V${mid}H${n.x}V${y2}`, class: 'fc-edge' }, flow);
+    fcEdges[id] = path;
+  }
+});
+Object.entries(FC).forEach(([id, n]) => {
+  const g = sv('g', { class: 'fc-node' + (id === 'root' ? ' root' : '') + (n.term ? ' term ' + n.term : ''), 'data-id': id }, flow);
+  sv('rect', { x: n.x - n.w / 2, y: n.y - H2, width: n.w, height: H2 * 2, rx: 9 }, g);
+  const t = sv('text', { x: n.x, y: n.t.length === 1 ? n.y + 5 : n.y - 4 }, g);
+  n.t.forEach((line, i) => { const ts = sv('tspan', { x: n.x, dy: i ? 18 : 0 }, t); ts.textContent = line; });
+  if (!n.term && id !== 'root') {
+    g.setAttribute('role', 'button');
+    g.setAttribute('aria-label', n.t.join(' '));
+    g.addEventListener('click', () => zClick(id));
+    g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); zClick(id); } });
+  }
+  fcNodes[id] = g;
+});
+Object.values(fcEdges).forEach(p => { try { p.style.setProperty('--len', Math.ceil(p.getTotalLength())); } catch (e) { p.style.setProperty('--len', 400); } });
+const zScore = scorer($('#z-score'));
+let zPath = [], zStep = 0, zCur = 'root', zMiss = 0, zDone = false, zReason = null;
+function setChoosable() {
+  Object.values(fcNodes).forEach(g => { g.classList.remove('choosable'); g.removeAttribute('tabindex'); });
+  (CHILD[zCur] || []).forEach(id => { fcNodes[id].classList.add('choosable'); fcNodes[id].setAttribute('tabindex', '0'); });
+}
+function newZero() {
+  let p, an, idx;
+  for (let tries = 0; tries < 50; tries++) {
+    p = parseNumber(genNumber()); an = analyze(p.coef);
+    const digits = an.tokens.map((t, i) => (t.type === 'digit' ? i : -1)).filter(i => i >= 0);
+    const zeros = digits.filter(i => an.tokens[i].ch === '0');
+    if (zeros.length) { idx = Math.random() < 0.88 ? pick(zeros) : pick(digits); break; }
+  }
+  zReason = an.tokens[idx].reason;
+  zPath = PATH[zReason]; zStep = 0; zCur = 'root'; zMiss = 0; zDone = false;
+  renderNumber($('#z-digits'), p, an);
+  an.tokens[idx].node.classList.add('target');
+  Object.values(fcNodes).forEach(g => g.classList.remove('on', 'wrong'));
+  Object.values(fcEdges).forEach(e => e.classList.remove('on'));
+  fcNodes.root.classList.add('on');
+  setChoosable();
+  feedback($('#z-fb'), null, '<p>Click the box in the flowchart that describes the highlighted digit.</p>');
+}
+function lightEdge(id) { const e = fcEdges[id]; e.classList.remove('on'); void e.getBoundingClientRect(); e.classList.add('on'); }
+function zClick(id) {
+  if (zDone || !(CHILD[zCur] || []).includes(id)) return;
+  const g = fcNodes[id];
+  if (id === zPath[zStep]) {
+    g.classList.remove('wrong'); g.classList.add('on'); lightEdge(id);
+    zCur = id; zStep++;
+    $$('.fc-node.wrong', flow).forEach(n => n.classList.remove('wrong'));
+    if (zStep === zPath.length) {
+      zDone = true; setChoosable();
+      const T = 'T' + id;
+      setTimeout(() => { lightEdge(T); setTimeout(() => fcNodes[T].classList.add('on'), RM.matches ? 0 : 380); finishZero(); }, RM.matches ? 0 : 420);
+    } else setChoosable();
+  } else {
+    zMiss++;
+    g.classList.remove('wrong'); void g.getBoundingClientRect(); g.classList.add('wrong');
+    feedback($('#z-fb'), false, `<p>${HINT[zStep]}</p>`);
+  }
+}
+function finishZero() {
+  const r = RULES[zReason], ok = zMiss === 0;
+  zScore(ok);
+  feedback($('#z-fb'), ok, `<p><strong>${r.sig ? 'Significant.' : 'Not significant.'}</strong> ${r.text}${ok ? '' : ' You reached it with a hint; this one is marked for review.'}</p>`);
+}
+$('#z-next').addEventListener('click', newZero);
+
+/* ================= 5. MATH ================= */
+const mScore = scorer($('#m-score'));
+let mMode = 'add', mProb = null, mAnswered = false, mStepsShown = false;
+const dpOf = s => (s.includes('.') ? s.split('.')[1].length : 0);
+function genAdd() {
+  for (;;) {
+    const k = Math.random() < 0.4 ? 3 : 2, sub = k === 2 && Math.random() < 0.45;
+    const dps = Array.from({ length: k }, () => ri(0, 4));
+    if (new Set(dps).size === 1) continue;
+    let vals = dps.map(dp => (dp === 0 ? String(ri(2, 59)) : rand(0.2, 60).toFixed(dp)));
+    if (vals.some((v, i) => dps[i] === 0 && /0$/.test(v)) || vals.some(v => Number(v) === 0)) continue;
+    if (sub) { const o = [0, 1].sort((a, b) => Number(vals[b]) - Number(vals[a])); vals = o.map(i => vals[i]); }
+    const vdps = vals.map(dpOf);
+    const maxDp = Math.max(...vdps), minDp = Math.min(...vdps);
+    const ints = vals.map(v => Math.round(Number(v) * 10 ** maxDp));
+    const total = sub ? ints[0] - ints[1] : ints.reduce((a, b) => a + b);
+    if (total <= 0) continue;
+    const factor = 10 ** (maxDp - minDp);
+    if ((total % factor) * 2 === factor) continue;
+    const R = (Math.round(total / factor) / 10 ** minDp).toFixed(minDp);
+    const C = String(Number((total / 10 ** maxDp).toFixed(maxDp)));
+    if (C === R && Math.random() < 0.8) continue;
+    return { kind: 'add', sub, vals, vdps, minDp, R, C };
+  }
+}
+function genOperand() {
+  for (;;) {
+    const sf = ri(2, 5), v = 10 ** rand(-1.2, 2);
+    const s = v.toPrecision(sf);
+    if (/e/.test(s) || (!s.includes('.') && /0$/.test(s)) || countOf(s) !== sf) continue;
+    return { s, sf };
+  }
+}
+function genMul() {
+  for (;;) {
+    const a = genOperand(), b = genOperand();
+    if (a.sf === b.sf) continue;
+    const div = Math.random() < 0.45;
+    const r = div ? Number(a.s) / Number(b.s) : Number(a.s) * Number(b.s);
+    const n = Math.min(a.sf, b.sf);
+    const scale = 10 ** (Math.floor(Math.log10(r)) - n + 1);
+    const frac = (r / scale) % 1;
+    if (Math.abs(frac - 0.5) < 1e-6) continue;
+    const R = r.toPrecision(n);
+    if (/e/.test(R) || (!R.includes('.') && /0$/.test(R)) || countOf(R) !== n || r > 9999) continue;
+    const C = String(Number(r.toPrecision(9)));
+    return { kind: 'mul', div, a, b, n, R, C };
+  }
+}
+function splitNum(s) { const i = s.indexOf('.'); return i < 0 ? [s, ''] : [s.slice(0, i), s.slice(i)]; }
+function renderProblem() {
+  const box = $('#m-problem');
+  const P = mProb;
+  if (P.kind === 'add') {
+    $('#m-rule').textContent = P.sub ? 'Subtract, then round.' : 'Add, then round.';
+    const ops = P.vals.map((v, i) => (i === 0 ? '' : P.sub ? '−' : '+'));
+    let html = '<div class="stack">';
+    P.vals.forEach((v, i) => {
+      const [a, b] = splitNum(v), last = '';
+      const st = `style="animation-delay:${i * 120}ms"`;
+      html += `<span class="op${last}" ${st}>${ops[i]}</span><span class="int${last}" ${st}>${a}</span><span class="frac${last}" ${st}>${b}</span><span class="chipcell" ${st}><span class="chip" data-i="${i}"></span></span>`;
+    });
+    box.innerHTML = html + '<span class="rule"></span></div>';
+  } else {
+    $('#m-rule').textContent = P.div ? 'Divide, then round.' : 'Multiply, then round.';
+    box.innerHTML = `<div class="expr"><span class="term">${P.a.s}<span class="chip" data-i="0"></span></span><span class="opx">${P.div ? '÷' : '×'}</span><span class="term" style="animation-delay:120ms">${P.b.s}<span class="chip" data-i="1"></span></span><span class="opx">=</span><span class="opx">?</span></div>`;
+  }
+}
+function newMath() {
+  mProb = mMode === 'add' ? genAdd() : genMul();
+  mAnswered = false; mStepsShown = false;
+  renderProblem();
+  $('#m-input').value = ''; clearFb($('#m-fb')); $('#m-steplist').innerHTML = '';
+}
+function showChips() {
+  const P = mProb, chips = $$('#m-problem .chip');
+  if (P.kind === 'add') {
+    chips.forEach((c, i) => { const d = P.vdps[i]; c.textContent = `${d} decimal place${d === 1 ? '' : 's'}`; c.classList.toggle('least', d === P.minDp); c.style.setProperty('--d', (i * 140) + 'ms'); c.classList.add('show'); });
+  } else {
+    [P.a, P.b].forEach((o, i) => { const c = chips[i]; c.textContent = `${o.sf} sig figs`; c.classList.toggle('least', o.sf === P.n); c.style.setProperty('--d', (i * 140) + 'ms'); c.classList.add('show'); });
+  }
+}
+function cutIndex() {
+  const P = mProb, C = P.C;
+  if (P.kind === 'add') { const p = C.indexOf('.'); if (p < 0) return C.length; return P.minDp === 0 ? p : p + 1 + P.minDp; }
+  let seen = 0, started = false;
+  for (let i = 0; i < C.length; i++) {
+    if (!/\d/.test(C[i])) continue;
+    if (C[i] !== '0') started = true;
+    if (started) { seen++; if (seen === P.n) return i + 1; }
+  }
+  return C.length;
+}
+function showSteps() {
+  if (mStepsShown) return; mStepsShown = true;
+  showChips();
+  const P = mProb, C = P.C, cut = cutIndex();
+  const kept = C.slice(0, cut), drop = C.slice(cut);
+  let s1, s3;
+  if (P.kind === 'add') {
+    s1 = `Count decimal places. The fewest is <strong>${P.minDp}</strong>, so the answer keeps ${P.minDp} decimal place${P.minDp === 1 ? '' : 's'}.`;
+    s3 = `Round to ${P.minDp} decimal place${P.minDp === 1 ? '' : 's'}:`;
+  } else {
+    s1 = `Count significant figures. The fewest is <strong>${P.n}</strong>, so the answer keeps ${P.n} significant figures.`;
+    s3 = `Round to ${P.n} significant figures:`;
+  }
+  const dropTxt = drop.replace(/^\./, '.');
+  const steps = [
+    s1,
+    `The calculator shows <span class="big">${C}</span>.`,
+    `${s3} <span class="big">${esc(kept)}${drop ? `<span class="dropped">${esc(dropTxt)}</span>` : ''}</span> → <span class="big"><strong>${P.R}</strong></span>${P.R.length > C.length ? ' (add the zero so the answer shows the right precision)' : ''}`,
+  ];
+  $('#m-steplist').innerHTML = steps.map((s, i) => `<li style="animation-delay:${300 + i * 450}ms">${s}</li>`).join('');
+}
+const normNum = s => s.trim().replace(/[\s,]/g, '').replace(/−/g, '-').replace(/^\+/, '').replace(/^(-?)\./, '$10.');
+function checkMath() {
+  const raw = normNum($('#m-input').value), P = mProb, fb = $('#m-fb');
+  if (!/^-?\d+(\.\d*)?$/.test(raw)) { feedback(fb, null, '<p>Type your answer as a number, such as 24.69</p>'); return; }
+  let ok = false, msg;
+  if (raw === P.R) { ok = true; msg = `<p><strong>Correct: ${P.R}.</strong> ${P.kind === 'add' ? 'The answer keeps only as many decimal places as the least precise measurement.' : 'The answer keeps only as many significant figures as the least precise measurement.'}</p>`; }
+  else {
+    const v = Number(raw), close = Math.abs(v - Number(P.C)) <= Math.abs(Number(P.C)) * 0.02 + 1e-9;
+    if (!close) msg = '<p><strong>Not quite.</strong> The value itself is off, so recheck the arithmetic before rounding.</p>';
+    else if (P.kind === 'add') {
+      const d = dpOf(raw);
+      msg = d !== P.minDp
+        ? `<p><strong>Right value, wrong precision.</strong> Your answer has ${d} decimal place${d === 1 ? '' : 's'}; it should have ${P.minDp}, matching the measurement with the fewest decimal places.</p>`
+        : `<p><strong>Check your rounding.</strong> Look at the first digit you drop: 5 or more rounds up.</p>`;
+    } else {
+      const c = countOf(raw);
+      msg = c !== P.n
+        ? `<p><strong>Right value, wrong precision.</strong> Your answer has ${c} significant figure${c === 1 ? '' : 's'}; it should have ${P.n}, matching the measurement with the fewest significant figures.</p>`
+        : `<p><strong>Check your rounding.</strong> Look at the first digit you drop: 5 or more rounds up.</p>`;
+    }
+  }
+  if (!mAnswered) { mScore(ok); mAnswered = true; }
+  feedback(fb, ok, msg + (ok ? '' : '<p>Use “Show the steps” to see the method.</p>'));
+  if (ok) showSteps();
+}
+$('#m-check').addEventListener('click', checkMath);
+onEnter($('#m-input'), checkMath);
+$('#m-steps').addEventListener('click', () => { if (!mAnswered) { mAnswered = true; mScore(false); } showSteps(); });
+$('#m-next').addEventListener('click', newMath);
+seg($('#m-seg'), m => { mMode = m; newMath(); });
+
+/* ================= 6. CHALLENGE ================= */
+const BANK = [
+  { q: 'Accuracy describes…', o: ['how close a measurement is to the accepted value', 'how reproducible a set of measurements is', 'how many digits a measurement has', 'how expensive the instrument is'], e: 'Accuracy compares a measurement with the accepted value. Precision is about reproducibility.' },
+  { q: 'Precision describes…', o: ['the reproducibility, or reliability, of a measurement', 'how close a measurement is to the accepted value', 'the difference between measured and accepted values', 'the number of trials you run'], e: 'Precision is how closely repeated measurements agree with each other.' },
+  { q: 'The difference between a measured value and the accepted value is called the…', o: ['error', 'precision', 'estimated digit', 'uncertainty range'], e: 'Error = measured value − accepted value.' },
+  { q: 'Three trials give 5.42 g, 5.43 g and 5.42 g. The accepted value is 6.10 g. The data are…', o: ['precise but not accurate', 'accurate but not precise', 'accurate and precise', 'neither accurate nor precise'], e: 'The trials agree closely (precise), but all are far from 6.10 g (not accurate).' },
+  { q: 'In a valid measurement, the estimated digit corresponds to…', o: ['one tenth of the smallest marks on the instrument', 'the smallest marks on the instrument', 'ten times the smallest marks', 'whatever the calculator displays'], e: 'Read every certain digit, then estimate one more: one tenth of the smallest division.' },
+  { q: 'A ruler is marked every 0.1 cm. A wooden splint lines up exactly with the 7 cm mark. Record its length.', o: ['7.00 cm', '7 cm', '7.0 cm', '7.000 cm'], m: true, e: 'Marks every 0.1 cm mean you estimate the hundredths. The splint is exactly on 7, so both zeros are measured digits and must be written.' },
+  { q: 'Ruler A has no marks between 0 and 10 cm. Which reading is valid for it?', o: ['3 cm', '3.2 cm', '3.21 cm', '3.210 cm'], m: true, e: 'With no marks between 0 and 10, the ones digit is already the estimate, so record 0 decimal places.' },
+  { q: 'Pebble B was weighed on three balances. Which balance is the most precise?', x: 'pebble', o: ['Super Balance', 'Centi-Balance', 'Balance Pro', 'They are equally precise'], e: 'The Super Balance reports to the nearest thousandth of a gram, three decimal places.' },
+  { q: 'On the Super Balance, Pebble B reads 0.020 g. How many significant figures?', x: 'pebble', o: ['2', '1', '3', '4'], m: true, e: 'The leading zeros are placeholders. The 2 and the trailing zero (the estimated digit) are significant.' },
+  { q: 'How many significant figures are in 900.06?', o: ['5', '3', '2', '4'], m: true, e: 'Zeros between nonzero digits are always significant.' },
+  { q: 'How many significant figures are in 8.1000?', o: ['5', '2', '3', '4'], m: true, e: 'Trailing zeros to the right of a decimal point are significant.' },
+  { q: 'How many significant figures are in 501.040?', o: ['6', '5', '4', '3'], m: true, e: 'Both inner zeros are sandwiched, and the final zero is after the decimal point.' },
+  { q: 'How many significant figures are in 3 000 000?', o: ['1', '7', '6', '3'], m: true, e: 'Trailing zeros with no decimal point are not significant: 3 × 10⁶.' },
+  { q: 'How many significant figures are in 10.0?', o: ['3', '1', '2', '4'], m: true, e: 'The decimal point is written, so both zeros count: 1.00 × 10¹.' },
+  { q: 'How many significant figures are in 0.0004?', o: ['1', '4', '5', '2'], m: true, e: 'Leading zeros are placeholders: 4 × 10⁻⁴.' },
+  { q: 'How many significant figures are in 5.20 × 10⁴?', o: ['3', '2', '5', '6'], m: true, e: 'In scientific notation, every digit left of the × is significant.' },
+  { q: '23.11223 + 1.3324 + 0.25 = ?', o: ['24.69', '24.69463', '24.7', '24.695'], m: true, e: 'For addition, keep the fewest decimal places. 0.25 has two, so 24.69463 rounds to 24.69.' },
+  { q: '23.123 × 1.33 = ?', o: ['30.8', '30.75359', '30.75', '31'], m: true, e: 'For multiplication, keep the fewest significant figures. 1.33 has three, so 30.75359 rounds to 30.8.' },
+  { q: 'A sample has mass 12.5 g and volume 4.1 mL. Report its density.', o: ['3.0 g/mL', '3.04878 g/mL', '3.05 g/mL', '3 g/mL'], m: true, e: '12.5 ÷ 4.1 = 3.04878… The volume has only 2 significant figures, so the answer is 3.0 g/mL.' },
+  { q: 'A multi-step answer will have 3 significant figures. Intermediate values should keep at least…', o: ['4 significant figures', '3 significant figures', '2 significant figures', 'only whole numbers'], e: 'Keep at least n + 1 digits in intermediate steps so you do not round too early.' },
+  { q: 'Why does a calculated density need sig-fig rules at all?', o: ['A calculated result cannot be more precise than the measurements it came from', 'Calculators make arithmetic mistakes', 'Density always has three significant figures', 'Extra digits make an answer more accurate'], e: 'Significant figures carry measurement uncertainty through a calculation.' },
+];
+const PEBBLE = '<div class="lcd-row"><div class="lcd">Balance Pro<b>0 g</b></div><div class="lcd">Centi-Balance<b>0.02 g</b></div><div class="lcd">Super Balance<b>0.020 g</b></div></div>';
+const qArea = $('#q-area');
+let qSet = [], qi = 0, qRight = 0, qMissed = [];
+function getBest() { try { return Number(localStorage.getItem('sigfig-review-best')) || 0; } catch (e) { return 0; } }
+function setBest(n) { try { localStorage.setItem('sigfig-review-best', String(n)); } catch (e) {} }
+function showBest() { const b = getBest(); $('#best').textContent = b ? `Best: ${b} of 10` : 'Best: none yet'; }
+function startQuiz() {
+  qSet = shuffle(BANK).slice(0, 10).map(q => ({ ...q, opts: shuffle(q.o.map((t, i) => ({ t, right: i === 0 }))) }));
+  qi = 0; qRight = 0; qMissed = [];
+  renderQ();
+}
+function renderQ() {
+  const q = qSet[qi];
+  qArea.innerHTML = `<div class="q-card">
+    <div class="q-top"><span>Question ${qi + 1} of ${qSet.length}</span><span>${qRight} correct so far</span></div>
+    <div class="bar"><i style="width:${qi / qSet.length * 100}%"></i></div>
+    <p class="q-text">${esc(q.q)}</p>
+    ${q.x === 'pebble' ? '<div class="q-extra">' + PEBBLE + '</div>' : ''}
+    <div class="choices">${q.opts.map((o, i) => `<button type="button" class="choice" data-i="${i}" style="animation:rowIn .35s ease ${i * 70}ms both">${q.m ? `<span class="mathy">${esc(o.t)}</span>` : esc(o.t)}</button>`).join('')}</div>
+    <div class="feedback" id="q-fb" aria-live="polite"></div>
+    <div class="row" style="margin-top:16px"><button type="button" class="btn" id="q-next" hidden>${qi === qSet.length - 1 ? 'See my score' : 'Next question'}</button></div>
+  </div>`;
+  requestAnimationFrame(() => { const bar = $('.bar i', qArea); bar.style.width = ((qi + 1) / qSet.length * 100) + '%'; });
+  $$('.choice', qArea).forEach(b => b.addEventListener('click', () => {
+    const o = q.opts[+b.dataset.i];
+    $$('.choice', qArea).forEach((x, i) => { x.disabled = true; x.style.animation = ''; if (q.opts[i].right) x.classList.add('right'); });
+    if (!o.right) { b.classList.add('wrong'); qMissed.push(q); } else qRight++;
+    const rightT = q.opts.find(x => x.right).t;
+    feedback($('#q-fb', qArea), o.right, `<p><strong>${o.right ? 'Correct.' : 'The answer is ' + esc(rightT) + '.'}</strong> ${esc(q.e)}</p>`);
+    const nb = $('#q-next', qArea); nb.hidden = false; nb.focus();
+  }));
+  $('#q-next', qArea).addEventListener('click', () => { qi++; if (qi < qSet.length) renderQ(); else endQuiz(); });
+}
+function endQuiz() {
+  const best = getBest(), n = qSet.length;
+  if (qRight > best) setBest(qRight);
+  showBest();
+  const msg = qRight === n ? 'A perfect round.' : qRight >= 8 ? 'Strong work. Review the misses below.' : qRight >= 5 ? 'Getting there. The stations above cover each idea you missed.' : 'Worth another pass through the stations, then try again.';
+  qArea.innerHTML = `<div class="result">
+    <div class="ringwrap"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="bg" cx="60" cy="60" r="50"/><circle class="fg" cx="60" cy="60" r="50" pathLength="100"/></svg>
+      <div class="lbl"><span id="ring-n">0</span><small>of ${n} correct</small></div></div>
+    <div><h3 style="font-size:28px">${msg}</h3>${qRight > best && best ? '<p class="note">New best score.</p>' : ''}
+      <div class="row" style="margin-top:16px"><button type="button" class="btn" id="q-again">Try a new set</button></div></div>
+  </div>
+  ${qMissed.length ? `<ul class="review">${qMissed.map(q => `<li>${esc(q.q)}<br><span class="a">${esc(q.o[0])}</span>: ${esc(q.e)}</li>`).join('')}</ul>` : ''}`;
+  const fg = $('.fg', qArea), num = $('#ring-n', qArea);
+  requestAnimationFrame(() => requestAnimationFrame(() => { fg.style.strokeDashoffset = String(100 - qRight / n * 100); }));
+  if (RM.matches) num.textContent = qRight;
+  else { let c = 0; const iv = setInterval(() => { num.textContent = c; if (c++ >= qRight) clearInterval(iv); }, 1200 / Math.max(qRight, 1)); }
+  $('#q-again', qArea).addEventListener('click', startQuiz);
+}
+
+/* ================= init ================= */
+showStation((location.hash || '').slice(1));
+newAcc();
+newSplint();
+newTap();
+newZero();
+newMath();
+showBest();
+startQuiz();
+})();
+</script>
+</body>
+</html>
